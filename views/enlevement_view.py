@@ -226,6 +226,7 @@ class EnlevementView(QWidget):
         self.groupbox_bouton = QGroupBox("")
         
         self.btn_valider = QPushButton("Valider")
+        # self.btn_valider.clicked.connect(self.creer_enlevement)
         self.btn_annuler = QPushButton("Annuler")
         
         # layout grid
@@ -290,7 +291,6 @@ class EnlevementView(QWidget):
         """ 
         Récupère les donnnées du document depuis l'interface 
         """
-        
         document_data = {
             'num_bon_de_sortie': self.edit_num_bon_de_sortie.text(),
             'date_bon_de_sortie': self.edit_date_bon_de_sortie.date().toPyDate(),
@@ -299,7 +299,7 @@ class EnlevementView(QWidget):
         for v in document_data.values():
             print(v)
         return document_data
-    
+      
     def get_enlevement_specific_document_data(self):
         """
         Cette méthode récupère les données spécifiques au document enlèvement
@@ -347,13 +347,30 @@ class EnlevementView(QWidget):
         conteneur_data = {
             'num_TC': self.edit_num_tc.text(),
             'plomb': self.edit_num_plomb.text(),
-            'type_conteneur': self.cb1.text(),
-            'etat_TC': self.edit_etat_tc.text(),
+            'type_conteneur': self.cb1.currentText(),
+            'etat_TC': self.cb2.currentText(),
             'observation': self.edit_observation.text(),
             'num_BL': self.edit_num_bl.text(),
             'compagnie_de_navigation': self.edit_compagnie_de_navigation.text()
         }
         return conteneur_data
+    # def creer_enlevement(self):
+        """
+        methode pour creer un nouvel enlevement; il sert pour récuperer le data saisies par l'utilisateur
+        """
+    #     print("creer un nouvele enlevement") 
+    #     data_enlevement = self.get_date_lieu_enlevement()
+    #     data_conteneur = self.get_conteneur_data()
+    #     data_transporteur = self.get_transporteur_data()
+    #     data_document = self.get_document_data()
+    #     data_specific_document_enlevement = self.get_enlevement_specific_document_data()
+        
+        
+    #     print(data_enlevement)
+    #     print(data_conteneur)
+    #     print(data_transporteur)
+    #     print(data_document)
+    #     print(data_specific_document_enlevement)
         
     
     def ajouter_documents(self):
@@ -365,7 +382,7 @@ class EnlevementView(QWidget):
         self.setGraphicsEffect(self.blur_effect)
         
         self.ajouter_documents = AjouterDocuments(self)
-        self.ajouter_documents.finished.connect(self.remove_blur_effect)
+        self.ajouter_documeNTs.finished.connect(self.remove_blur_effect)
         self.ajouter_documents.show()
     
     def remove_blur_effect(self):
@@ -405,6 +422,7 @@ class AjouterDocuments(QDialog):
         # ajuster la taille de la fenetre AjouterDocuments
         self.adjustSize()
         
+        
     def create_table(self):
         """
         Creation de la table notificateur
@@ -431,3 +449,5 @@ class AjouterDocuments(QDialog):
         # desactiver le sroll vertical pour que tout soit visisble
         
         self.table_widget.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        
+    

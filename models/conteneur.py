@@ -4,15 +4,40 @@ from .base import Base
 import enum
 
 class EtatTCEnum(enum.Enum):
+    """
+    classe enumerer l'option disponible pour l'etat du conteneur
+    """
     FULL_IN = "Full In"
     EMPTY_IN = "Empty In"
 
+
 class ConteneurType(enum.Enum):
-    TWENTY_FT = "20ft"
-    FORTY_FT = "40ft"
-    REEFER = "Reefer"
-class Conteneurs(Base):
-    __tablename__ = 'conteneurs'
+    """
+    classe enumerer l'option disponible pour le type de conteneur
+    """
+    FLATRACK_TWENTY = "Flatrack20"
+    FLATRACK_FOURTY = "Flatrack40"
+    FLATRACKCOL_TWENTY = "FlatrackCol20"
+    FLATRACKCOL_FOURTY = "FlatrackCol40"
+    ISOTANK = "Isotank"
+    OPENTOP_TWENTY = "Opentop20"
+    OPENTOP_FOURTY = "Opentop40"
+    PLATFORM_TWENTY = "Platform20"
+    PLATFORM_FOURTY = "Platform40"
+    REEFER_TWENTY = "Reefer20"
+    REEFER_FOURTY = "Reefer40"
+    REEFER_FOURTY_H = "Reefer40H"
+    STANDARD_TWENTY = "Standard20"
+    STANDARD_FOURTY = "Standard40"
+    UPGRADE_TWENTY = "Upgrade20"
+    UPGRADE_FOURTY = "Upgrade40"
+    
+    
+class Conteneur(Base):
+    """
+    Table conteneur
+    """
+    __tablename__ = 'conteneur'
     
     id = Column(Integer, primary_key=True, index=True)
     num_TC = Column(String, nullable=False)
@@ -28,4 +53,7 @@ class Conteneurs(Base):
     enlevement_id = Column(Integer, ForeignKey('enlevement.id'))
     
     # relation avec l'enlevement
-    enlevement = relationship('Enlevement', back_populates='conteneurs')
+    enlevement = relationship('Enlevement', back_populates='conteneur')
+    
+    # relation avec Documents
+    # document = relationship('Enlevement', back_populates='document')

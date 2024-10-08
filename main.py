@@ -5,7 +5,7 @@ from views.enlevement_view import EnlevementView
 from views.expedition_view import ExpeditionView
 from views.reception_view import ReceptionView
 from views.restitution_view import RestitutionView
-# from controllers.enlevement_controller import EnlevementController
+from controllers.enlevement_controller import EnlevementController
 
 def main():
     """" 
@@ -109,7 +109,7 @@ def main():
     expedition_view = ExpeditionView()
     reception_view = ReceptionView()
     restitution_view = RestitutionView()
-    # controller = EnlevementController(session, enlevement_view)
+    controller = EnlevementController(session, enlevement_view)
     enlevement_view.show()
     expedition_view.show()
     reception_view.show()

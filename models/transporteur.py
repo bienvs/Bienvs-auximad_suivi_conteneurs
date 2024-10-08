@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 from .base import Base
 
 class Transporteur(Base):
+    """
+    table transporteur
+    """
     __tablename__ = 'transporteur'
     id = Column(Integer, primary_key=True, index=True)
     nom_transporteur = Column(String, nullable=False)
@@ -16,11 +19,11 @@ class Transporteur(Base):
     enlevement = relationship('Enlevement', back_populates='transporteur')
     
     # relation avec la classe expedition
-    expedition = relationship('Expedition', back_populates='transporteur')
+    # expedition = relationship('Expedition', back_populates='transporteur')
     
     # relation avec la classe reception
-    reception = relationship('Reception', back_populates='transporteur')
+    # reception = relationship('Reception', back_populates='transporteur')
     
     # relation avec la classe restitution
-    restitution = relationship('Restitution', back_populates='transporteur')
+    # restitution = relationship('Restitution', back_populates='transporteur')
     
