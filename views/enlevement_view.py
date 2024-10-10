@@ -314,17 +314,17 @@ class EnlevementView(QWidget):
             print(v)
         return enlevement_specific_data
     
-    def get_date_lieu_enlevement(self):
-        """
-        Cette méthode récupère la date et lieu d'enlèvement
-        """
-        date_lieu_enlevement = {
-            'lieu_enlevement': self.edit_lieu_enlevement.text(),
-            'date_enlevement': self.edit_date_enlevement.date().toPyDate()
-        }
-        for v in date_lieu_enlevement.values():
-            print(v)
-        return date_lieu_enlevement
+    # def get_date_lieu_enlevement(self):
+    #     """
+    #     Cette méthode récupère la date et lieu d'enlèvement
+    #     """
+    #     date_lieu_enlevement = {
+    #         'lieu_enlevement': self.edit_lieu_enlevement.text(),
+    #         'date_enlevement': self.edit_date_enlevement.date().toPyDate()
+    #     }
+    #     for v in date_lieu_enlevement.values():
+    #         print(v)
+    #     return date_lieu_enlevement
         
     def get_transporteur_data(self):
         """
@@ -354,6 +354,61 @@ class EnlevementView(QWidget):
             'compagnie_de_navigation': self.edit_compagnie_de_navigation.text()
         }
         return conteneur_data
+    
+    def get_date(self):
+        """
+        recuperer la date de l'enlevement
+        """
+        return self.edit_lieu_enlevement.text()
+    
+    def get_lieu(self):
+        """
+        recuperer le lieu d'enlevement
+        """
+        return self.edit_date_enlevement.date().toPyDate()
+    
+    def get_eta(self):
+        """
+        recuperer l'eta de la phase d'enlevement
+        """
+        return self.edit_eta
+    
+    def get_date_surestaries(self):
+        """
+        recuperer la date surestaries
+        """
+        return self.edit_date_surestaries.date().toPyDate()
+    
+    def get_depassement_jours1(self):
+        """
+        recuperer la date de depassement du surestaries
+        """
+        return self.edit_depassement_surestaries.text()
+    
+    def get_frais_surestaries(self):
+        """
+        recuperer la frais de surestaries
+        """
+        return self.edit_surestaries
+    
+    def get_date_magasinage(self):
+        """
+        recuperer la date magasinage
+        """
+        return self.edit_date_magasinage.date().toPyDate()
+    
+    def get_depassement_jouurs2(self):
+        """
+        recuperer la date de depassement magasinage
+        """
+        return self.edit_depassement_magasinage.text()
+    
+    def get_frais_magasinage(self):
+        """
+        recuperer le frais de magasinage
+        """
+        return self.edit_frais_magasinage()
+    
     # def creer_enlevement(self):
         """
         methode pour creer un nouvel enlevement; il sert pour récuperer le data saisies par l'utilisateur
@@ -380,9 +435,8 @@ class EnlevementView(QWidget):
         self.blur_effect = QGraphicsBlurEffect()
         self.blur_effect.setBlurRadius(10)
         self.setGraphicsEffect(self.blur_effect)
-        
         self.ajouter_documents = AjouterDocuments(self)
-        self.ajouter_documeNTs.finished.connect(self.remove_blur_effect)
+        self.ajouter_documents.finished.connect(self.remove_blur_effect)
         self.ajouter_documents.show()
     
     def remove_blur_effect(self):
@@ -433,15 +487,15 @@ class AjouterDocuments(QDialog):
         self.setFixedSize(700, 500)
         
         # definir le nombre de lignes et le nombres de colonnes
-        self.table_widget.setRowCount(4)
-        self.table_widget.setColumnCount(2)
+        self.table_widget.setRowCount(6)
+        self.table_widget.setColumnCount(4)
         # masquer le numero de ligne
         self.table_widget.verticalHeader().setVisible(False)
         self.table_widget.setColumnWidth(0, 200)
         self.table_widget.setColumnWidth(1, 300)
         
         # ajouter l'en-tete du tableau
-        self.table_widget.setHorizontalHeaderLabels(["Propriétaire", "Adresse Mail"])
+        self.table_widget.setHorizontalHeaderLabels(["Code doc", "Libelllé", "Reference doc", "date doc"])
         
         # ajuster la taille des lignes 
         self.table_widget.resizeRowsToContents()

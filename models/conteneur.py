@@ -48,7 +48,6 @@ class Conteneur(Base):
     num_BL = Column(String, nullable=False)
     compagnie_de_navigation = Column(String, nullable=False, default=EtatTCEnum.EMPTY_IN)
     
-    
     # clé étrangère pour l'enlevement
     enlevement_id = Column(Integer, ForeignKey('enlevement.id'))
     

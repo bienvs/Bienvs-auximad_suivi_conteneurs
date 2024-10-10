@@ -19,3 +19,4 @@ class DocumentEnlevement(Base):
     
     # Relation avec la classe Enlevement
     enlevement = relationship('Enlevement', back_populates='enlevement_document')
+

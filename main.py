@@ -5,11 +5,13 @@ from views.enlevement_view import EnlevementView
 from views.expedition_view import ExpeditionView
 from views.reception_view import ReceptionView
 from views.restitution_view import RestitutionView
+from views.accueil_view import MainWindow
 from controllers.enlevement_controller import EnlevementController
+
 
 def main():
     """" 
-    applcation principale
+    application principale
     """
     app = QApplication(sys.argv)
     
@@ -21,10 +23,11 @@ def main():
                       }
                       QLineEdit, QDateEdit, QComboBox {
                           border: 1px solid transparent;
-                          background-color: #e0e0e0;
+                          background-color: #fffffF;
                           border-radius: 5px;
                           padding: 5px;
                           font-size: 12px;
+                          margin: 5px;
                       }
                       QLineEdit:focus, QDateEdit:focus{
                           border-color: #2980b9;
@@ -71,17 +74,17 @@ def main():
                            
                        }
                        QGroupBox {
-                            border: 1px solid #3498db;
                             border-radius: 5px;
-                            margin-top: 10px;
+                            margin-top: 15px;
                             margin-left: 10px;
-                            background-color: white;
+                            background-color: #e0e0e0;
+                            
                         }
                         QGroupBox::title {
                             subcontrol-origin: margin;
                             subcontrol-position: top center;
-                            padding: 0 2px;
-                            color: green; 
+                            padding: 0 5px;
+                            color: #4CAF50;; 
                             border-radius: 2px;
                         }
                         QTableWidget {
@@ -102,14 +105,17 @@ def main():
                         QTableWidget::item:hover {
                             background-color: #e0e0e0;
                         }
+                        
                       """)
     
     session = create_session()
+    main_window = MainWindow()
     enlevement_view = EnlevementView()
     expedition_view = ExpeditionView()
     reception_view = ReceptionView()
     restitution_view = RestitutionView()
     controller = EnlevementController(session, enlevement_view)
+    main_window.show()
     enlevement_view.show()
     expedition_view.show()
     reception_view.show()

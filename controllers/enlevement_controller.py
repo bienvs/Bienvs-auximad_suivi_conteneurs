@@ -6,6 +6,7 @@ from models.conteneur import Conteneur
 from models.document_enlevement import DocumentEnlevement
 from views.enlevement_view import EnlevementView
 
+
 class EnlevementController:
     """
     le controleur de la phase enlevement
@@ -33,8 +34,11 @@ class EnlevementController:
         print(conteneur_data)
         transporteur_data = self.view.get_transporteur_data()
         print(transporteur_data)
-        date_lieu_enlevement = self.view.get_date_lieu_enlevement()
-        print(date_lieu_enlevement)
+        date_enlevement = self.view.get_date()
+        print(date_enlevement)
+        lieu_enlevement = self.view.get_lieu()
+        print(lieu_enlevement)
+
         
         # fusionner les documents
         # full_document_data = {**document_data, **enlevement_specific_document_data}
@@ -46,7 +50,8 @@ class EnlevementController:
         
         # creer l'objet enlevement 
         nouvel_enlevement = Enlevement(
-            date_lieu_enlevement = date_lieu_enlevement,
+            date_enlevement = date_enlevement,
+            lieu_enlevement = lieu_enlevement,
             document = [document],
             transporteur = transporteur,
             conteneur = [conteneur],
