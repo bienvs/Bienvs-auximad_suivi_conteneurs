@@ -9,6 +9,9 @@ from models.document import Document
 from models.transporteur import Transporteur
 from models.document_enlevement import DocumentEnlevement
 from models.enlevement import Enlevement
+from models.document_expedition import DocumentExpedition
+from models.expedition import Expedition
+
 from datetime import datetime
 
 # creation de l'engine
@@ -19,7 +22,12 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def test_database():
+    # Conteneur.__table__.drop(engine)
+    # DocumentEnlevement.__table__.drop(engine)
+    # Document.__table__.drop(engine)
+    # Transporteur.__table__.drop(engine)
     Enlevement.__table__.drop(engine)
+    # DocumentExpedition.__table__.drop(engine)
     # creation de la table dans la base de donnees
     Base.metadata.create_all(engine)
     
@@ -88,9 +96,19 @@ def test_database():
     
     # ----------------------------------------------------- creation de l'enlevement -------------------------------------------------------------------
     date_string4 = "2024-08-05"
+    eta_date = "2024-05-06"
+    sur_date = "2024-05-06"
+    sur_date = "2024-05-06"
+    mag_date = "2024-05-06"
     nouvel_enlevement = Enlevement(
         date_enlevement = datetime.strptime(date_string4, '%Y-%m-%d').date(),
         lieu_enlevement = "Tamatave",
+        ETA = datetime.strptime(eta_date, '%Y-%m-%d').date(),
+        date_surestaries = datetime.strptime(sur_date, '%Y-%m-%d').date(),
+        depassement_jours = "0",
+        surestaries = "0",
+        date_magasinage = datetime.strptime(mag_date, '%Y-%m-%d').date(),
+        frais_magasinage = "0",
         document = [nouveau_document],
         transporteur = nouveau_transporteur,
         conteneur = [nouveau_conteneur],
@@ -101,7 +119,52 @@ def test_database():
     session.add(nouvel_enlevement)
     session.commit()
     
-    print("Enlevem créé avec succés!")    
+    session.refresh(nouvel_enlevement) # rafraichir pour obtenir l'id de l'enleevement
+    print("Enlevement  créé avec succés!")    
 
+    # ----------------------------------------------------- creation du document specifier pour l'enlevement -------------------------------------------------------------------
+    res_date = "2024-08-02"
+    env_date = "2024-08-02"
+    nouveau_document_expedition = DocumentExpedition(
+        num_bon_de_livraison = "0001",
+        date_bon_de_livraison = datetime.strptime(date_string2, '%Y-%m-%d').date(),
+        num_dossier = "0001",
+        lieu_restitution = "Antsirabe",
+        date_restitution = datetime.strptime(res_date, '%Y-%m-%d').date(),
+        date_envoi = datetime.strptime(env_date, '%Y-%m-%d').date(),
+        envoi_a = "Tamatave"
+    )
+    
+    # Ajout des documents specifiés pour l'enlevement à la session
+    session.add(nouveau_document_expedition)
+    
+    session.commit()
+    print('Document pour expedition ajouté avec succés!')
+    
+    # ----------------------------------------------------- creation de l'expédition -------------------------------------------------------------------
+    eir_date = "2024-08-02"
+    nouvelle_expedition = Expedition(
+        num_de_livraison = "001",
+        num_EIR_plein = "001",
+        date_EIR_plein = datetime.strptime(eir_date, '%Y-%m-%d').date(),
+        documents_expedition = [nouveau_document_expedition],
+        enlevement = nouvel_enlevement,
+    )
+    
+    # Ajout des expedition à la session
+    session.add(nouvelle_expedition)
+    session.commit()
+    
+    session.refresh(nouvelle_expedition)
+    print('Expedition ajouté avec succés!')
+    
+    # afficher l'information du bon de sortie
+    bon_de_sortie_info = nouvelle_expedition.get_bon_sortie_info()
+    
+    # afficher l'informartion du transporteur
+    transporteur_info = nouvelle_expedition.get_transporteur_info()
+    
+    # afficher l'information du conteneur
+    conteneur_info = nouvelle_expedition.get_conteneur_info()
     
 test_database()

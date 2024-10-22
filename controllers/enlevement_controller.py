@@ -38,6 +38,10 @@ class EnlevementController:
         print(date_enlevement)
         lieu_enlevement = self.view.get_lieu()
         print(lieu_enlevement)
+        ETA = self.view.get_eta()
+        print(ETA)
+        date_surestaries = self.view.get_date_surestaries()
+        print(date_surestaries)
 
         
         # fusionner les documents
@@ -52,12 +56,14 @@ class EnlevementController:
         nouvel_enlevement = Enlevement(
             date_enlevement = date_enlevement,
             lieu_enlevement = lieu_enlevement,
+            ETA = ETA,
+            date_surestaries = date_surestaries,
             document = [document],
             transporteur = transporteur,
             conteneur = [conteneur],
             enlevement_document = [enlevement_document]
         )
-        
+        j
         # sauvegarde dans la BD
         try:
             self.session.add(nouvel_enlevement)

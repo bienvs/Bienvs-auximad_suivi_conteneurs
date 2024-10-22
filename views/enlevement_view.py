@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QGridLayout, QLineEdit, QLabel, QHBoxLayout, QComboBox, QGroupBox, QVBoxLayout, QPushButton, QDateEdit, QScrollArea, QTableWidget, QDialog, QGraphicsBlurEffect
 from PyQt6.QtCore import Qt
+from datetime import time
 
 class EnlevementView(QWidget):
     """
@@ -189,14 +190,14 @@ class EnlevementView(QWidget):
         self.label_depassement_surestaries = QLabel("Dépassement(jours)")
         self.edit_depassement_surestaries = QLineEdit()
         self.label_surestaries = QLabel("Surestaries")
-        self.edit_surestaries = QLineEdit()
+        self.edit_surestaries = QLineEdit("0.00")
         
         self.label_date_magasinage = QLabel("Date Magasinage")
         self.edit_date_magasinage = QLineEdit()
         self.label_depassement_magasinage = QLabel("Dépassement(jours)")
         self.edit_depassement_magasinage = QLineEdit()
         self.label_frais_magasinage = QLabel("Frais Magasinage")
-        self.edit_frais_magasinage = QLineEdit()
+        self.edit_frais_magasinage = QLineEdit("0.00")
         
         # layout grid
         grid_calculs = QGridLayout()
@@ -377,37 +378,46 @@ class EnlevementView(QWidget):
         """
         recuperer la date surestaries
         """
-        return self.edit_date_surestaries.date().toPyDate()
+        self.edit_date_surestaries = self.edit_date_surestaries.text()
+        
+        # self.edit_date_surestaries.setText("0.00")
+        # return self.edit_date_surestaries.date().toPyDate()
     
     def get_depassement_jours1(self):
         """
         recuperer la date de depassement du surestaries
         """
-        return self.edit_depassement_surestaries.text()
+        
+        self.edit_depassement_surestaries.setText(time.strftime("%d/%m/%y"))
+        return self.edit_depassement_surestaries.date().toPyDate()
     
     def get_frais_surestaries(self):
         """
         recuperer la frais de surestaries
         """
+        self.edit_surestaries.setText("0.00")
         return self.edit_surestaries
     
     def get_date_magasinage(self):
         """
         recuperer la date magasinage
         """
+        self.edit_date_magasinage.setText(time.strftime("%d/%m/%y"))
         return self.edit_date_magasinage.date().toPyDate()
     
     def get_depassement_jouurs2(self):
         """
         recuperer la date de depassement magasinage
         """
-        return self.edit_depassement_magasinage.text()
+        self.edit_depassement_magasinage.setText(time.strftime("%d/%m/%y"))
+        return self.edit_depassement_magasinage.date().toPyDate()
     
     def get_frais_magasinage(self):
         """
         recuperer le frais de magasinage
         """
-        return self.edit_frais_magasinage()
+        self.edit_frais_magasinage.setText("0.00")
+        return self.edit_frais_magasinage
     
     # def creer_enlevement(self):
         """

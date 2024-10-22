@@ -12,10 +12,10 @@ class Enlevement(Base):
     date_enlevement = Column(DateTime, nullable=False)
     lieu_enlevement = Column(String, nullable=False)
     ETA = Column(String, nullable=False, default='0.00')
-    date_surestaries = Column(String, nullable=False, default=None)
-    depassement_jours = Column(String, nullable=False, default=None)
+    date_surestaries = Column(String, nullable=False)
+    depassement_jours = Column(String, nullable=False)
     surestaries = Column(Double, nullable=False, default='0.00')
-    date_magasinage = Column(String, nullable=False, default=None)
+    date_magasinage = Column(String, nullable=False)
     frais_magasinage = Column(Double, nullable=False, default='0.00')
     
     # relation avec la classe transporteur
@@ -35,3 +35,8 @@ class Enlevement(Base):
     
     # relation avec la classe AutresDocuments
     # autres_documents = relationship('AutresDocuments', back_populates='enlevement')
+    
+    # relation avec la classe Expedition 
+    expedition = relationship('Expedition', back_populates='enlevement', cascade="all, delete-orphan")
+    
+    

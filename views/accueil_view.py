@@ -1,4 +1,5 @@
-import sys, os
+import os
+from config import PATH as path 
 from PyQt6.QtWidgets import QLabel, QToolBar, QMainWindow, QVBoxLayout, QComboBox, QWidget, QLineEdit, QHBoxLayout, QPushButton, QTableWidget
 from PyQt6.QtGui import QAction, QPixmap
 from PyQt6.QtCore import *
@@ -115,10 +116,11 @@ class MainWindow(QMainWindow):
         """
         choisir un fichier et exporter en excel
         """
-        path = 'E:\Stage\projet_1.0\policy_files\Documents_Légaux\BonSortie2024.csv'
-        print(os.path.exists(path))
-        os.system(f"start excel.exe {path}")
-        print('ok')
+        file = './BonSortie2024.csv'  
+        if os.path.exists(path):
+            os.system(f"start excel.exe {path + file}") # afaka atao: start pdf.exe CV.pdf
+        else:
+            print('Incorrecte')
         
         
     def admin_clicked(self):
