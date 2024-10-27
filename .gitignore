@@ -1,2 +1,4 @@
+.env
+.env_copy.ignore
 ./activision
 */__pycache__/**
