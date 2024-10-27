@@ -1,7 +1,8 @@
 """
 Tools for sending email.
 """
-from config import settings
+import os
+from dotenv import load_dotenv;    load_dotenv()
 # Imported for backwards compatibility and for the sake
 # of a cleaner namespace. These symbols used to be in
 # backends and the subsequent reorganization (See #10355)
@@ -25,12 +26,12 @@ __all__ = [
 def get_connection(backend=None, fail_silently=False, **kwds):
     """Load an email backend and return an instance of it.
 
-    If backend is None (default), use settings.EMAIL_BACKEND.
+    If backend is None (default), use os.environ["EMAIL_BACKEND"].
 
     Both fail_silently and other keyword arguments are used in the
     constructor of the backend.
     """
-    klass = import_string(backend or settings.EMAIL_BACKEND)
+    klass = import_string(backend or os.environ["EMAIL_BACKEND"])
     return klass(fail_silently=fail_silently, **kwds)
 
 
@@ -89,13 +90,13 @@ def send_mass_mail(datatuple, fail_silently=False, auth_user=None,
 def mail_admins(subject, message, fail_silently=False, connection=None,
                 html_message=None):
     """Send a message to the admins, as defined by the ADMINS setting."""
-    if not settings.ADMINS:
+    if not os.environ["ADMINS"]:
         return
-    if not all(isinstance(a, (list, tuple)) and len(a) == 2 for a in settings.ADMINS):
+    if not all(isinstance(a, (list, tuple)) and len(a) == 2 for a in os.environ["ADMINS"]):
         raise ValueError('The ADMINS setting must be a list of 2-tuples.')
     mail = EmailMultiAlternatives(
-        '%s%s' % (settings.EMAIL_SUBJECT_PREFIX, subject), message,
-        settings.SERVER_EMAIL, [a[1] for a in settings.ADMINS],
+        '%s%s' % (os.environ["EMAIL_SUBJECT_PREFIX"], subject), message,
+        os.environ["SERVER_EMAIL"], [a[1] for a in os.environ["ADMINS"]],
         connection=connection,
     )
     if html_message:
@@ -106,13 +107,13 @@ def mail_admins(subject, message, fail_silently=False, connection=None,
 def mail_managers(subject, message, fail_silently=False, connection=None,
                   html_message=None):
     """Send a message to the managers, as defined by the MANAGERS setting."""
-    if not settings.MANAGERS:
+    if not os.environ["MANAGERS"]:
         return
-    if not all(isinstance(a, (list, tuple)) and len(a) == 2 for a in settings.MANAGERS):
+    if not all(isinstance(a, (list, tuple)) and len(a) == 2 for a in os.environ["MANAGERS"]):
         raise ValueError('The MANAGERS setting must be a list of 2-tuples.')
     mail = EmailMultiAlternatives(
-        '%s%s' % (settings.EMAIL_SUBJECT_PREFIX, subject), message,
-        settings.SERVER_EMAIL, [a[1] for a in settings.MANAGERS],
+        '%s%s' % (os.environ["EMAIL_SUBJECT_PREFIX"], subject), message,
+        os.environ["SERVER_EMAIL"], [a[1] for a in os.environ["MANAGERS"]],
         connection=connection,
     )
     if html_message:

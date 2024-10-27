@@ -1,4 +1,4 @@
-import mimetypes
+import mimetypes, os
 from email import (
     charset as Charset, encoders as Encoders, generator, message_from_string,
 )
@@ -14,7 +14,7 @@ from email.utils import formataddr, formatdate, getaddresses, make_msgid
 from io import BytesIO, StringIO
 from pathlib import Path
 
-from config import settings
+from dotenv import load_dotenv;    load_dotenv()
 from mail.utils import DNS_NAME
 from mail.encoding import force_str, punycode
 
@@ -54,7 +54,7 @@ ADDRESS_HEADERS = {
 
 def forbid_multi_line_headers(name, val, encoding):
     """Forbid multi-line headers to prevent header injection."""
-    encoding = encoding or settings.DEFAULT_CHARSET
+    encoding = encoding or os.environ["DEFAULT_CHARSET"]
     val = str(val)  # val may be lazy
     if '\n' in val or '\r' in val:
         raise BadHeaderError("Header values can't contain newlines (got %r for header %r)" % (val, name))
@@ -189,7 +189,7 @@ class EmailMessage:
     """A container for email information."""
     content_subtype = 'plain'
     mixed_subtype = 'mixed'
-    encoding = None     # None => use settings default
+    encoding = "utf-8"     
 
     def __init__(self, subject='', body='', from_email=None, to=None, bcc=None,
                  connection=None, attachments=None, headers=None, cc=None,
@@ -222,7 +222,7 @@ class EmailMessage:
             self.reply_to = list(reply_to)
         else:
             self.reply_to = []
-        self.from_email = from_email or settings.DEFAULT_FROM_EMAIL
+        self.from_email = from_email or os.environ["DEFAULT_FROM_EMAIL"]
         self.subject = subject
         self.body = body or ''
         self.attachments = []
@@ -242,7 +242,7 @@ class EmailMessage:
         return self.connection
 
     def message(self):
-        encoding = self.encoding or settings.DEFAULT_CHARSET
+        encoding = self.encoding or os.environ["DEFAULT_CHARSET"]
         msg = SafeMIMEText(self.body, self.content_subtype, encoding)
         msg = self._create_message(msg)
         msg['Subject'] = self.subject
@@ -259,7 +259,7 @@ class EmailMessage:
             # the stdlib/OS concept of a timezone, however, Django sets the
             # TZ environment variable based on the TIME_ZONE setting which
             # will get picked up by formatdate().
-            msg['Date'] = formatdate(localtime=settings.EMAIL_USE_LOCALTIME)
+            msg['Date'] = formatdate(localtime=os.environ["EMAIL_USE_LOCALTIME"])
         if 'message-id' not in header_names:
             # Use cached DNS_NAME for performance
             msg['Message-ID'] = make_msgid(domain=DNS_NAME)
@@ -336,7 +336,7 @@ class EmailMessage:
 
     def _create_attachments(self, msg):
         if self.attachments:
-            encoding = self.encoding or settings.DEFAULT_CHARSET
+            encoding = self.encoding or os.environ["DEFAULT_CHARSET"]
             body_msg = msg
             msg = SafeMIMEMultipart(_subtype=self.mixed_subtype, encoding=encoding)
             if self.body or body_msg.is_multipart():
@@ -357,7 +357,7 @@ class EmailMessage:
         """
         basetype, subtype = mimetype.split('/', 1)
         if basetype == 'text':
-            encoding = self.encoding or settings.DEFAULT_CHARSET
+            encoding = self.encoding or os.environ["DEFAULT_CHARSET"]
             attachment = SafeMIMEText(content, subtype, encoding)
         elif basetype == 'message' and subtype == 'rfc822':
             # Bug #18967: per RFC2046 s5.2.1, message/rfc822 attachments
@@ -436,7 +436,7 @@ class EmailMultiAlternatives(EmailMessage):
         return self._create_attachments(self._create_alternatives(msg))
 
     def _create_alternatives(self, msg):
-        encoding = self.encoding or settings.DEFAULT_CHARSET
+        encoding = self.encoding or os.environ["DEFAULT_CHARSET"]
         if self.alternatives:
             body_msg = msg
             msg = SafeMIMEMultipart(_subtype=self.alternative_subtype, encoding=encoding)

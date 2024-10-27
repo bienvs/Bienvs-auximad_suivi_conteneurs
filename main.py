@@ -1,4 +1,4 @@
-import sys
+import sys, os, datetime
 from PyQt6.QtWidgets import QApplication
 from config import create_session
 from views.enlevement_view import EnlevementView
@@ -114,6 +114,44 @@ def main():
     expedition_view.show()
     reception_view.show()
     restitution_view.show()
+    
+    from dotenv import load_dotenv;    load_dotenv()
+    
+    from mail import send_mail
+    try:     
+        mail_subject = f"Hi! Mail Contacting sent from Auximad {str(datetime.datetime.now())}"
+        message = f"""If you were leaving comment for my platform, wish you found what you excepted"""
+        to_email = os.environ["EMAIL_HOST_USER"]
+        
+        send_mail(
+            subject=mail_subject,
+            message=message,
+            from_email=os.environ["DEFAULT_FROM_EMAIL"],
+            recipient_list=[to_email]
+        )
+        print('Smtp Made')
+    except ConnectionError:
+        '''  File "/home/tahiana/Documents/PY/GUI/Bienvs-auximad_suivi_conteneurs/mail/backends/smtp.py", line 62, in open
+                self.connection = self.connection_class(self.host, self.port, **connection_params)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            File "/usr/lib/python3.11/smtplib.py", line 255, in __init__
+                (code, msg) = self.connect(host, port)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^
+            File "/usr/lib/python3.11/smtplib.py", line 341, in connect
+                self.sock = self._get_socket(host, port, self.timeout)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            File "/usr/lib/python3.11/smtplib.py", line 312, in _get_socket
+                return socket.create_connection((host, port), timeout,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            File "/usr/lib/python3.11/socket.py", line 827, in create_connection
+                for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            File "/usr/lib/python3.11/socket.py", line 962, in getaddrinfo
+                for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            socket.gaierror: [Errno -2] Name or service not known'''
+        print("Not online")
+    
     sys.exit(app.exec())
 
 

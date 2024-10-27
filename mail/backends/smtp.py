@@ -1,9 +1,9 @@
 """SMTP email backend class."""
 import smtplib
-import ssl
+import ssl, os
 import threading
 
-from config import settings
+from dotenv import load_dotenv;    load_dotenv()
 from mail.backends.base import BaseEmailBackend
 from mail.message import sanitize_address
 from mail.utils import DNS_NAME
@@ -14,23 +14,23 @@ class EmailBackend(BaseEmailBackend):
     A wrapper that manages the SMTP network connection.
     """
     def __init__(self, host=None, port=None, username=None, password=None,
-                 use_tls=None, fail_silently=False, use_ssl=None, timeout=None,
+                 use_tls=None, fail_silently=False, use_ssl=None, timeout=30,
                  ssl_keyfile=None, ssl_certfile=None,
                  **kwargs):
         super().__init__(fail_silently=fail_silently)
-        self.host = host or settings.EMAIL_HOST
-        self.port = port or settings.EMAIL_PORT
-        self.username = settings.EMAIL_HOST_USER if username is None else username
-        self.password = settings.EMAIL_HOST_PASSWORD if password is None else password
-        self.use_tls = settings.EMAIL_USE_TLS if use_tls is None else use_tls
-        self.use_ssl = settings.EMAIL_USE_SSL if use_ssl is None else use_ssl
-        self.timeout = settings.EMAIL_TIMEOUT if timeout is None else timeout
-        self.ssl_keyfile = settings.EMAIL_SSL_KEYFILE if ssl_keyfile is None else ssl_keyfile
-        self.ssl_certfile = settings.EMAIL_SSL_CERTFILE if ssl_certfile is None else ssl_certfile
+        self.host = host or os.environ["EMAIL_HOST"]
+        self.port = port or os.environ["EMAIL_PORT"]
+        self.username = os.environ["EMAIL_HOST_USER"] if username is None else username
+        self.password = os.environ["EMAIL_HOST_PASSWORD"] if password is None else password
+        self.use_tls = os.environ["EMAIL_USE_TLS"] == "True" if use_tls is None else use_tls
+        self.use_ssl = os.environ["EMAIL_USE_SSL"] == "True" if use_ssl is None else use_ssl
+        self.timeout = int(os.environ["EMAIL_TIMEOUT"]) if timeout is None else timeout
+        self.ssl_keyfile = os.environ["EMAIL_SSL_KEYFILE"] if ssl_keyfile is None else ssl_keyfile
+        self.ssl_certfile = os.environ["EMAIL_SSL_CERTFILE"] if ssl_certfile is None else ssl_certfile
         if self.use_ssl and self.use_tls:
             raise ValueError(
                 "EMAIL_USE_TLS/EMAIL_USE_SSL are mutually exclusive, so only set "
-                "one of those settings to True.")
+                "one of those to True.")
         self.connection = None
         self._lock = threading.RLock()
 
@@ -117,7 +117,7 @@ class EmailBackend(BaseEmailBackend):
         """A helper method that does the actual sending."""
         if not email_message.recipients():
             return False
-        encoding = email_message.encoding or settings.DEFAULT_CHARSET
+        encoding = email_message.encoding or os.environ["DEFAULT_CHARSET"]
         from_email = sanitize_address(email_message.from_email, encoding)
         recipients = [sanitize_address(addr, encoding) for addr in email_message.recipients()]
         message = email_message.message()
